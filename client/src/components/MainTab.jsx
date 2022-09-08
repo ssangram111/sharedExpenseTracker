@@ -3,6 +3,8 @@ import Tabs from 'react-bootstrap/Tabs';
 import {Button} from 'react-bootstrap';
 import Addmember from './group/Addmember';
 import AddExpense from './group/AddExpense';
+import React from 'react';
+import ComputePayments from './group/ComputePayments';
 
 
 const  MainTab = ({title,index}) => {
@@ -16,7 +18,7 @@ const  MainTab = ({title,index}) => {
 </div>
 
     <Tabs
-      defaultActiveKey="groups"
+      defaultActiveKey="expenses"
       id="controlled-tab-example"
       className="mb-3"
       justify
@@ -29,7 +31,7 @@ const  MainTab = ({title,index}) => {
       <AddExpense/>
       </Tab>
       <Tab eventKey="payments" title="Compute Payments">
-        <h1>Hello its me Tab 3</h1>
+        <ComputePayments/>
       </Tab>
      
      </Tabs>

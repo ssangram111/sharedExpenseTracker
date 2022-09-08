@@ -1,17 +1,32 @@
 import React from 'react'
 // import "./Home.css";
-import {Container,Row,Col,Form,Button} from 'react-bootstrap';
+import {Container,Row,Col,Form,Button,Table} from 'react-bootstrap';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 
+
+const people = [
+  {firstName: 'Trip to Manli', 
+  
+   },
+   {firstName: 'Trip to Goa', 
+  
+    },
+    {firstName: 'Trip To banglore', 
+    
+     },
+     {firstName: 'Trip to Thailand', 
+     
+      }
+];
 
 
 
 const Home = () => {
-    
+ 
+  const [members,setMembers] = useState(people);
 
- let navigate=useNavigate();
+
 
        const [event,setEvent] =useState({
         name:""
@@ -46,9 +61,7 @@ const Home = () => {
         if(res.status ===422 || !data){
           window.alert("please fill the data");
         }
-        else {
-       navigate('/tabs')
-        }
+       
        }
        
 
@@ -80,6 +93,34 @@ const Home = () => {
       </Col>
     </Row>
    </Container>
+
+
+
+   <Table striped responsive bordered hover variant="dark">
+      <thead>
+        <tr>
+          <th>S.No</th>
+          <th>Event Name</th>
+          
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+
+            {
+                members.map((data, index)=>{
+                    return(
+                        <tr key={index} className='text-primary' >
+                          {console.log(data)}
+                            <td >{index+1}</td>
+                            <td>{data.firstName}</td>
+                            
+                            <td> <button  className='btn btn-primary'>view expenses</button></td>
+                        </tr>
+                    )
+                })}
+ </tbody>
+    </Table>
 
 
    

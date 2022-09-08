@@ -56,7 +56,7 @@ const PostData = async(e) => {
           
           <Row>
             <Col lg={5} md={6} sm={12} className="p-5 m-auto shadow-sm rounded-lg">
-            <Form method='POST'>
+            <Form method='POST' onSubmit={PostData}>
             <Form.Group className="mb-3">
         <Form.Label>Username</Form.Label>
           <Form.Control
@@ -109,7 +109,7 @@ const PostData = async(e) => {
       <Button 
       className='btn-primary rounded btn-lg' 
       type="submit"
-      onClick={PostData} >
+       >
         Signup
       </Button>
       

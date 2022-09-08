@@ -7,6 +7,7 @@ import Signin from './Signin';
 import Signup from './Signup';
 import logo from './Images/logo.png';
 import MainTab from './MainTab';
+import React from 'react';
 
 
 
@@ -15,7 +16,7 @@ import MainTab from './MainTab';
 
 function Navbars() {
   return (
-    <>
+    <div>
    
          <Navbar bg="dark" variant="dark" expand="sm">
          <Container fluid>
@@ -41,7 +42,7 @@ function Navbars() {
         <Route path='/signup' element={<Signup/>}/>
         <Route path='/tabs' element={<MainTab/>}/>
       </Routes>
- </>
+ </div>
   );
 }
 

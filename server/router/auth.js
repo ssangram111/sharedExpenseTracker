@@ -10,38 +10,12 @@ const Authenticate = require("../middleware/authenticate");
 require('../db/conn')
 const User = require('../model/userSchema');
 const Event = require('../model/eventSchema');
+const List = require('../model/listSchema');
 
 router.get('/', (req,res) => {
     res.send(`Hello world from the server router js`);
 });
 
-
-// Using Promises  :->
-// router.post('/register',(req,res) => {
-
-//     const {name,email,password,cpassword} =req.body;
-
-//     if(!name || !email || !password || !cpassword){
-//         return res.status(422).json({error: "Please Filled the field Properly"});
-//     }
-   
-//     User.findOne({email: email})
-//     .then((userExist) => {
-//             if(userExist) {
-//                 return res.status(422).json ({error: "Email already Exist"});
-//             }
-
-//             const user = new User({name,email,password,cpassword});
-
-//             user.save().then(() => {
-//                 res.status(201).json({message: "user registered successfuly"})
-//             }).catch((err) => {
-//                 res.status(500).json({error: "Failed to registered"});
-//             })
-
-//     }).catch(err =>{console.log(err)});
-
-// });
 
 
 
@@ -143,6 +117,32 @@ router.post('/',async(req,res) => {
     } catch (err){
         console.log(err);
     }
+});
+
+
+// post expenses
+
+router.post('/addexpense',async(req,res) => {
+    
+    const {description,amount,date,whoPaid,whom}= req.body;
+    try{
+        const list = new List({description,amount,date,whoPaid,whom});
+        
+        const listRegister = await list.save();
+        
+        res.status(201).send("expense added");
+    }catch (err){
+        console.log(err);
+    }
+});
+
+// get expenses
+router.get("/addexpense",async(req,res)=>{
+    const list = await List.find();
+    res.status(200).json({
+        success: true,
+        list
+    })
 })
 
 module.exports = router;
