@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState,useEffect} from "react";
 import { Form,Button,Row,Col, Container } from "react-bootstrap";
 import axios from "axios";
 
@@ -11,10 +11,14 @@ const AddExpense = (props) => {
     const [date, setDate] = useState();
     const [whoPaid, setwhoPaid] = useState('');
     const [whom, setwhom] = useState([]);
+    const [myData,setMyData] = useState([]);
+
+  
    
 
    const submitHandler = async(event) => {
     event.preventDefault();
+    event.target.reset();
      
    await axios.post("/addexpense",{
       description: description,
@@ -35,7 +39,8 @@ const AddExpense = (props) => {
     setamount('');
     setDate('');
     setwhoPaid('');
-    setwhom('');
+   
+   
   }
 
 
@@ -52,11 +57,26 @@ const AddExpense = (props) => {
     }
    }
 
-  
+   //get members data from data base
 
-
-
-console.log(whom);
+   const getapiData = async() => {
+    try{
+     const res = await axios.get('/addmember');
+     setMyData(res.data.member);
+   
+     
+    } catch (error){
+     console.log(error);
+    }
+   }
+   //using useeffect
+   useEffect(() => {
+    getapiData();
+    
+    },[myData]);
+    
+    
+   
     return (
       <>
       <Container>
@@ -96,10 +116,13 @@ console.log(whom);
               <Form.Label>Who Paid</Form.Label>
               <Form.Select aria-label="Default select example" value={whoPaid} onChange={e=>setwhoPaid(e.target.value)}>
                             <option className="option">Who Paid</option>
-                                              <option>Shashank</option>
-                                              <option>Navjot</option>
-                                              <option>Rohit</option>
-                                              <option>Sangram</option>
+                            {
+                              myData.map((data,index) => {
+                                return (
+                                  <option key={index}>{data.members}</option>
+                                )
+                              })}
+                                           
                             </Form.Select>
              </Form.Group> 
                     
@@ -108,26 +131,18 @@ console.log(whom);
               <Form.Label>With Whom</Form.Label>
               </Form.Group>
               <Form.Group>
-                <Form.Check
-              inline
-              value="Shashank"
-              label="Shashank"
-              name="group"
-              onChange={handleCheck} />
-
-               <Form.Check
-              inline
-              value="Rohit"
-              label="Rohit"
-              name="group"
-              onChange={handleCheck} />
-
-              <Form.Check
-              inline
-              value="Navjot"
-              label="Navjot"
-              name="group"
-              onChange={handleCheck} />
+               
+             {
+              myData.map((data,index) => {
+                return (
+                  <Form.Check
+                  inline
+                  value={data.members}
+                  label={data.members}
+                  name="group"
+                  onChange={handleCheck} />
+                )
+              })}             
               </Form.Group>
 
                          

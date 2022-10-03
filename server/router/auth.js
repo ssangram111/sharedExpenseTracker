@@ -9,7 +9,7 @@ const Authenticate = require("../middleware/authenticate");
  
 require('../db/conn')
 const User = require('../model/userSchema');
-const Event = require('../model/eventSchema');
+const {Event,Member} = require('../model/eventSchema');
 const List = require('../model/listSchema');
 
 router.get('/', (req,res) => {
@@ -114,11 +114,54 @@ router.post('/',async(req,res) => {
             
             res.status(201).json({message: "event register successfully"})
         }
+
+
     } catch (err){
         console.log(err);
     }
 });
 
+//get event data 
+router.get("/",async(req,res)=>{
+    const event = await Event.find();
+    res.status(200).json({
+        success: true,
+    })
+    
+});
+
+// post members of the group
+router.post('/addmember',async(req,res) => {
+    const {members} = req.body;
+    if(!members){
+        return res.status(422).json({error: "Please Filled the data"});
+    }
+    try {
+        const memberExist = await Member.findOne({members:members})
+
+        if(memberExist){
+            return res.status(422).json({error:"Member already Exist"});
+        }else {
+            const member = new Member({members})
+            const membberRegister= await member.save();
+            
+            res.status(201).json({message: "member added successfully"})
+        }
+
+
+    } catch (err){
+        console.log(err);
+    }
+});
+
+//get members
+router.get("/addmember",async(req,res)=>{
+    const member = await Member.find();
+    res.status(200).json({
+        success: true,
+        member
+    })
+});
 
 // post expenses
 
@@ -143,6 +186,8 @@ router.get("/addexpense",async(req,res)=>{
         success: true,
         list
     })
-})
+});
+
+
 
 module.exports = router;

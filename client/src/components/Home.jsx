@@ -1,69 +1,48 @@
 import React from 'react'
 // import "./Home.css";
 import {Container,Row,Col,Form,Button,Table} from 'react-bootstrap';
-import { useState } from 'react';
-
-
-
-const people = [
-  {firstName: 'Trip to Manli', 
-  
-   },
-   {firstName: 'Trip to Goa', 
-  
-    },
-    {firstName: 'Trip To banglore', 
-    
-     },
-     {firstName: 'Trip to Thailand', 
-     
-      }
-];
+import { useState,useEffect } from 'react';
+import axios from 'axios';
 
 
 
 const Home = () => {
  
-  const [members,setMembers] = useState(people);
-
-
-
-       const [event,setEvent] =useState({
-        name:""
-       });
+    const [event,setEvent] =useState('');
+    const [myData,setMyData]= useState([]);
   
-       let name,value;
-       const HandleInputs = (e) => {
-        // console.log(e);
-        name= e.target.name;
-        value=e.target.value;
-        
-        setEvent({...event,[name]:value})
-       }
-       const PostData = async (e) => {
+     
+       const submitHandler = async (e) => {
         e.preventDefault();
-       
-        console.log(event)
-
-        const {name} = event;
-       
         
-        const res = await fetch("/",{
-          method:"POST",
-          headers: {
-            "Content-Type" : "application/json"
-          },
-          body:JSON.stringify({
-            name
-          })
+        //post data to dabase
+        await axios.post("/" ,{
+          name: event
         })
-        const data = await res.json();
-        if(res.status ===422 || !data){
-          window.alert("please fill the data");
-        }
-       
+        .then(function(res){
+          alert.apply(JSON.stringify(res.data))
+        })
+        .catch(function(error){
+          console.error(error.message);
+        })
+        setEvent('');
        }
-       
+    
+       //get data from database
+       const getapiData =async() => {
+        try{
+          const res = await axios.get('/');
+          setMyData(res.data);
+          console.log(myData);
+        }catch (error){
+          console.log(error);
+        }
+       }
+       //using useeffect
+   useEffect(() => {
+    getapiData();
+    },[]);
+
 
   return (
     <>
@@ -72,20 +51,19 @@ const Home = () => {
 
     <Row>
       <Col lg={5} md={6} sm={12} className="p-5 m-auto shadow-sm rounded-lg">
-        <Form>
+        <Form onSubmit={submitHandler}>
           <Form.Group className="mb-3">
             <Form.Label>Create sheet name</Form.Label>
             <Form.Control type="text"
             placeholder="Enter sheet name"
             name="name"
-            value={event.name}
-            onChange={HandleInputs}
+            value={event}
+            onChange={e=>setEvent(e.target.value)}
             />
           </Form.Group>
           <Button
           className="btn btn-primary rounded bt-lg btn-block"
-          type="submit"
-          onClick={PostData}>
+          type="submit">
            Create
           </Button>
         </Form>
@@ -107,8 +85,8 @@ const Home = () => {
       </thead>
       <tbody>
 
-            {
-                members.map((data, index)=>{
+            {/* {
+                event.map((data, index)=>{
                     return(
                         <tr key={index} className='text-primary' >
                           {console.log(data)}
@@ -118,7 +96,7 @@ const Home = () => {
                             <td> <button  className='btn btn-primary'>view expenses</button></td>
                         </tr>
                     )
-                })}
+                })} */}
  </tbody>
     </Table>
 

@@ -9,26 +9,34 @@ let navigate = useNavigate();
   const [email,setEmail] = useState('');
   const [password,setPassword] = useState('');
   
+  const count = 3;
+  
  const userLogin = async (e) => {
     e.preventDefault();
     
-    const res = await fetch('/login' , {
-      method:"POST",
-      headers: {
-        "Content-Type" : "application/json"
-      },
-      body:JSON.stringify({
-        email,password
-      })
-    });
+    if(count>3){
+
+      const res = await fetch('/login' , {
+        method:"POST",
+        headers: {
+          "Content-Type" : "application/json"
+        },
+        body:JSON.stringify({
+          email,password
+        })
+      });
+    
+      let data = await res.json();
+       if(res.status === 400 || !data){
+        window.alert("Invalid Credentials");
+       }else{
+        window.alert("login Successfully");
+        navigate('/');
+       }
+    }else{
+      window.alert("The account is locked please contact to cognic system ");
+    }
   
-    let data = await res.json();
-     if(res.status === 400 || !data){
-      window.alert("Invalid Credentials");
-     }else{
-      window.alert("login Successfully");
-      navigate('/');
-     }
     
  }
 

@@ -1,56 +1,53 @@
 import React from 'react'
-import { useState } from 'react'
+import { useState,useEffect } from 'react'
 import { Button,Row,Container,Col,Form } from 'react-bootstrap';
 import {Table} from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
+
 import axios from 'axios';
 
 
-
-
-
-const people = [
-  {firstName: 'Shashank patel'},
-   {firstName: 'Sangram Singh'},
-   {firstName: 'Newton School'},
-   
-];
  
 const Addmember = () => {
-  let navigate = useNavigate();
-const [members,setMembers] = useState(people);
-  const [addFormData,setAddFormData] = useState([{
-    firstName: "",
-  }]);
+  
+const [members,setMembers] = useState('');
 
-  const handleAddFormChange = (event) => {
-    event.preventDefault();
-   
+//get data from database:-
+const [myData,setMyData]= useState([]);
 
-    const fieldName = event.target.getAttribute('name');
-    const fieldValue = event.target.value;
 
-    const newFormData = {...addFormData};
-    newFormData[fieldName] = fieldValue;
+const submitHandler = async(event) => {
+event.preventDefault();
 
- setAddFormData(newFormData);
-  }
-
-  const handleAddFormSubmit = async(event) => {
-   event.preventDefault();
-
-   await axios.post("/",{
-    firstName:members
-  }).then(function(res){
-      alert.apply(JSON.stringify(res.data))
-  }).catch(function(error){
+   await axios.post("/addmember",{
+    members:members
+  })
+  .then(function(res){
+    alert.apply(JSON.stringify(res.data))   
+  })
+  .catch(function(error){
     console.error(error.message);
   })
-  
-  
-
-
+  setMembers('');
   }
+  
+  //get data from database
+
+  const getapiData = async() => {
+    try{
+     const res = await axios.get('/addmember');
+     setMyData(res.data.member);
+ 
+    } catch (error){
+     console.log(error);
+    }
+   }
+   //using useeffect
+   useEffect(() => {
+    getapiData();
+    },[myData]);
+    
+   
+
   return (
     <>
     <Container>
@@ -61,14 +58,15 @@ const [members,setMembers] = useState(people);
       <Col lg={5} md={6} sm={8} className="p-5 m-auto shadow-sm rounded-lg ">
 
         <Form  className='d-flex justify-content-around' 
-        onSubmit={handleAddFormSubmit}>
+        onSubmit={submitHandler}>
           <Form.Group>
             <Form.Control
             name="firstName"
             className='w-100'
             type='text'
+            value={members}
             placeholder='Enter Name'
-          onChange={handleAddFormChange}
+          onChange={e=>setMembers(e.target.value)}
             
             />
           </Form.Group>
@@ -95,12 +93,12 @@ const [members,setMembers] = useState(people);
       <tbody>
 
             {
-                members.map((data, index)=>{
+                myData.map((data, index)=>{
                     return(
                         <tr key={index} className='text-primary' >
-                          {console.log(data)}
+                          {/* {console.log(data)} */}
                             <td >{index+1}</td>
-                            <td>{data.firstName}</td>
+                            <td>{data.members}</td>
                             
                             <td> <button  className='btn btn-primary'>Delete</button> <button  className='btn btn-primary'>Edit</button></td>
                         </tr>

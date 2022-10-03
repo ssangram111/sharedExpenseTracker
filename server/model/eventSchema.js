@@ -7,8 +7,19 @@ const eventSchema = new mongoose.Schema({
         type: String,
         required:true
     }
-})
+   
+});
+
+const memberSchema= new mongoose.Schema({
+    members:{
+        type: String,
+        required: true
+    }
+});
+
+const Member = mongoose.model("Member",memberSchema);
 
 const Event = mongoose.model("Event",eventSchema);
 
- module.exports =Event;
+ module.exports ={Event,Member};
+//  module.exports = Member;
